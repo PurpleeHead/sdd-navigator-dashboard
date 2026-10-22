@@ -1,4 +1,4 @@
-import type { Annotation, Requirement, Stats, Task } from './types';
+import type { Annotation, Requirement, ScanStatus, Stats, Task } from './types';
 
 export class DataValidationError extends Error {
   constructor(message: string) { super(message); this.name = 'DataValidationError'; }
@@ -30,6 +30,28 @@ export function validateTasks(value: unknown): Task[] {
   if (!Array.isArray(value)) throw new DataValidationError('Tasks payload must be an array.');
   for (const row of value) if (!isRecord(row) || typeof row.id !== 'string' || typeof row.requirementId !== 'string' || typeof row.title !== 'string' || !['open', 'in_progress', 'done'].includes(String(row.status)) || typeof row.updatedAt !== 'string' || (row.assignee !== undefined && typeof row.assignee !== 'string')) throw new DataValidationError('A task has an invalid shape.');
   return value as Task[];
+}
+
+export function validateScanStatus(value: unknown): ScanStatus {
+  if (!isRecord(value) || !['idle', 'scanning', 'completed', 'failed'].includes(String(value.status)) || typeof value.startedAt !== 'string') {
+    throw new DataValidationError('Scan status payload has an invalid shape.');
+  }
+  if (value.completedAt !== undefined && typeof value.completedAt !== 'string') {
+    throw new DataValidationError('Scan status completedAt must be a date-time string.');
+  }
+  if (value.duration !== undefined && (typeof value.duration !== 'number' || !Number.isInteger(value.duration) || value.duration < 0)) {
+    throw new DataValidationError('Scan status duration must be a non-negative integer.');
+  }
+  if (value.message !== undefined && typeof value.message !== 'string') {
+    throw new DataValidationError('Scan status message must be a string.');
+  }
+  return {
+    status: value.status as ScanStatus['status'],
+    startedAt: value.startedAt,
+    ...(typeof value.completedAt === 'string' ? { completedAt: value.completedAt } : {}),
+    ...(typeof value.duration === 'number' ? { duration: value.duration } : {}),
+    ...(typeof value.message === 'string' ? { message: value.message } : {}),
+  };
 }
 
 export function validateStats(value: unknown): Stats {
