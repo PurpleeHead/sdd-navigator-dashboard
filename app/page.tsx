@@ -73,7 +73,7 @@ export default function DashboardPage() {
   const orphanTasks = useMemo(() => bundle ? findOrphanTasks(bundle.tasks, bundle.requirements) : [], [bundle]);
   const toggleValue = <T extends string>(list: T[], value: T, set: (items: T[]) => void) => set(list.includes(value) ? list.filter((item) => item !== value) : [...list, value]);
   // @req SCD-UI-013
-  const onScan = async () => { setScanning(true); setScanMessage(''); const result = await triggerScan(); setScanning(false); if (result.ok) setScanMessage(result.data.message ?? `Scan status: ${result.data.status}`); else setScanMessage(result.error.message); };
+  const onScan = async () => { setScanning(true); setScanMessage(''); const result = await triggerScan(); if (result.ok) { setScanMessage(result.data.message ?? `Scan status: ${result.data.status}`); if (result.data.status === 'completed') { const refreshed = await getDataBundle(); if (refreshed.ok) setBundle(refreshed.data); else setScanMessage(`Scan completed, but dashboard refresh failed: ${refreshed.error.message}`); } } else { setScanMessage(result.error.message); } setScanning(false); };
 
   if (loading) return <main className="loading-shell"><div className="loader" /><p>Loading traceability workspace…</p></main>;
   if (error || !bundle) return <main className="error-shell"><div className="error-icon">!</div><h1>Dashboard unavailable</h1><p>{error || 'No data was returned.'}</p><button className="button primary" onClick={() => void load()}>Try again</button></main>;
@@ -86,7 +86,7 @@ export default function DashboardPage() {
       <div className="workspace-switch"><div className="workspace-avatar">AC</div><div><strong>Atlas Core</strong><small>Repository workspace</small></div><span className="chevron">⌄</span></div>
       <div className="nav-label">WORKSPACE</div>
       <nav className="side-nav" aria-label="Main navigation"><a className="active" href="#overview"><span>▦</span> Overview</a><a href="#requirements"><span>◇</span> Requirements <span className="nav-count">{stats.requirementStats.total}</span></a><a href="#tasks"><span>☷</span> Tasks <span className="nav-count">{stats.taskStats.total}</span></a><a href="#orphans"><span>⚑</span> Orphan records {orphanAnnotations.length + orphanTasks.length > 0 && <span className="nav-alert">{orphanAnnotations.length + orphanTasks.length}</span>}</a></nav>
-      <div className="sidebar-bottom"><div className="scan-status"><span className="status-dot"/><div><strong>Workspace synced</strong><small>Local sample data</small></div></div><div className="user-profile"><div className="user-avatar">JD</div><div><strong>Jordan Davis</strong><small>Developer</small></div><span className="more">···</span></div></div>
+      <div className="sidebar-bottom"><div className="scan-status"><span className="status-dot"/><div><strong>Workspace synced</strong><small>{process.env.NEXT_PUBLIC_API_URL ? 'Connected API' : 'Local sample data'}</small></div></div><div className="user-profile"><div className="user-avatar">JD</div><div><strong>Jordan Davis</strong><small>Developer</small></div><span className="more">···</span></div></div>
     </aside>
 
     <section className="main-column">
