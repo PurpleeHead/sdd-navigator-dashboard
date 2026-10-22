@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DataValidationError, validateRequirements, validateTasks, validateAnnotations, validateStats } from '../lib/validation';
+import { DataValidationError, validateRequirements, validateTasks, validateAnnotations, validateScanStatus, validateStats } from '../lib/validation';
 
 describe('runtime schema validation', () => {
   // @req SCD-UI-009
@@ -25,6 +25,16 @@ describe('official SDD Navigator API v3 payloads', () => {
     expect(validateAnnotations([{ file: 'src/main.ts', line: 12, reqId: 'FR-API-001', type: 'impl', snippet: '// req FR-API-001' }])).toMatchObject([
       { filePath: 'src/main.ts', line: 12, requirementId: 'FR-API-001', type: 'impl' },
     ]);
+  });
+  it('validates official scan status payloads', () => {
+    expect(validateScanStatus({ status: 'completed', startedAt: '2026-10-22T12:00:00Z', completedAt: '2026-10-22T12:00:02Z', duration: 2000 })).toEqual({
+      status: 'completed',
+      startedAt: '2026-10-22T12:00:00Z',
+      completedAt: '2026-10-22T12:00:02Z',
+      duration: 2000,
+    });
+    expect(() => validateScanStatus({ status: 'unknown', startedAt: '2026-10-22T12:00:00Z' })).toThrow(DataValidationError);
+    expect(() => validateScanStatus({ status: 'completed' })).toThrow(DataValidationError);
   });
   it('normalizes official aggregate statistics', () => {
     expect(validateStats({
