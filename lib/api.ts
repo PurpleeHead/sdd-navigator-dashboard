@@ -29,7 +29,14 @@ export async function getStats(): Promise<Result<Stats>> {
 }
 // @req SCD-UI-002
 export async function listRequirements(filters: RequirementFilters = {}): Promise<Result<Requirement[]>> {
-  if (API_BASE_URL) return request(`/requirements${queryString({ type: filters.type?.join(','), status: filters.status?.join(','), sort: filters.sort, order: filters.order })}`, validateRequirements);
+  if (API_BASE_URL) {
+    const result = await request(`/requirements${queryString({ type: filters.type?.length === 1 ? filters.type[0] : undefined, status: filters.status?.length === 1 ? filters.status[0] : undefined, sort: filters.sort, order: filters.order })}`, validateRequirements);
+    if (!result.ok) return result;
+    let items = result.data;
+    if (filters.type?.length) items = items.filter((item) => filters.type?.includes(item.type));
+    if (filters.status?.length) items = items.filter((item) => filters.status?.includes(item.status));
+    return { ok: true, data: items };
+  }
   let items = validateRequirements(mockRequirements);
   if (filters.type?.length) items = items.filter((item) => filters.type?.includes(item.type));
   if (filters.status?.length) items = items.filter((item) => filters.status?.includes(item.status));
@@ -40,15 +47,15 @@ export async function listRequirements(filters: RequirementFilters = {}): Promis
 // @req SCD-UI-006
 export async function getRequirement(id: string): Promise<Result<RequirementDetail>> {
   if (API_BASE_URL) {
-    const result = await request<Requirement>(`/requirements/${encodeURIComponent(id)}`, (value) => {
-      if (!value || typeof value !== 'object' || typeof (value as Requirement).id !== 'string') throw new Error('Invalid requirement detail.');
-      return value as Requirement;
+    return request<RequirementDetail>(`/requirements/${encodeURIComponent(id)}`, (value) => {
+      if (!value || typeof value !== 'object') throw new Error('Invalid requirement detail.');
+      const row = value as Record<string, unknown>;
+      const requirement = validateRequirements([row])[0];
+      if (!Array.isArray(row.annotations) || !Array.isArray(row.tasks)) throw new Error('Requirement detail must include annotations and tasks.');
+      const annotations = validateAnnotations(row.annotations);
+      const tasks = validateTasks(row.tasks);
+      return { ...requirement, annotations: annotations.filter((item) => item.requirementId === id), tasks: tasks.filter((item) => item.requirementId === id) };
     });
-    if (!result.ok) return result;
-    const [annotations, tasks] = await Promise.all([listAnnotations(), listTasks()]);
-    if (!annotations.ok) return annotations;
-    if (!tasks.ok) return tasks;
-    return { ok: true, data: { ...result.data, annotations: annotations.data.filter((a) => a.requirementId === id), tasks: tasks.data.filter((t) => t.requirementId === id) } };
   }
   const requirement = validateRequirements(mockRequirements).find((item) => item.id === id);
   if (!requirement) return { ok: false, error: { kind: 'not_found', message: `Requirement ${id} was not found.` } };
@@ -64,7 +71,13 @@ export async function listAnnotations(filters: { type?: 'impl' | 'test'; orphans
 }
 // @req SCD-UI-007
 export async function listTasks(filters: TaskFilters & { sort?: 'id' | 'updatedAt'; order?: 'asc' | 'desc' } = {}): Promise<Result<Task[]>> {
-  if (API_BASE_URL) return request(`/tasks${queryString({ status: filters.status?.join(','), orphans: filters.orphans === undefined ? undefined : String(filters.orphans), sort: filters.sort, order: filters.order })}`, validateTasks);
+  if (API_BASE_URL) {
+    const result = await request(`/tasks${queryString({ status: filters.status?.length === 1 ? filters.status[0] : undefined, orphans: filters.orphans === undefined ? undefined : String(filters.orphans), sort: filters.sort, order: filters.order })}`, validateTasks);
+    if (!result.ok) return result;
+    let items = result.data;
+    if (filters.status?.length) items = items.filter((item) => filters.status?.includes(item.status));
+    return { ok: true, data: items };
+  }
   let items = validateTasks(mockTasks);
   if (filters.status?.length) items = items.filter((item) => filters.status?.includes(item.status));
   if (filters.orphans !== undefined) { const ids = new Set(validateRequirements(mockRequirements).map((item) => item.id)); items = items.filter((item) => !ids.has(item.requirementId) === filters.orphans); }
@@ -74,12 +87,12 @@ export async function listTasks(filters: TaskFilters & { sort?: 'id' | 'updatedA
 // @req SCD-UI-013
 export async function triggerScan(): Promise<Result<ScanStatus>> {
   if (API_BASE_URL) return request('/scan', (value) => value as ScanStatus, { method: 'POST' });
-  return { ok: true, data: { status: 'completed', startedAt: new Date().toISOString(), finishedAt: new Date().toISOString(), message: 'Mock scan completed. No backend was contacted.' } };
+  return { ok: true, data: { status: 'completed', startedAt: new Date().toISOString(), completedAt: new Date().toISOString(), message: 'Mock scan completed. No backend was contacted.' } };
 }
 // @req SCD-UI-013
 export async function getScanStatus(): Promise<Result<ScanStatus>> {
   if (API_BASE_URL) return request('/scan', (value) => value as ScanStatus);
-  return { ok: true, data: { status: 'completed', finishedAt: mockStats.lastScanAt ?? undefined, message: 'Showing the last sample scan.' } };
+  return { ok: true, data: { status: 'completed', startedAt: mockStats.lastScanAt ?? undefined, completedAt: mockStats.lastScanAt ?? undefined, message: 'Showing the last sample scan.' } };
 }
 export async function getDataBundle(): Promise<Result<DataBundle>> {
   const [stats, requirements, annotations, tasks] = await Promise.all([getStats(), listRequirements(), listAnnotations(), listTasks()]);
