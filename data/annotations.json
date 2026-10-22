@@ -1,0 +1,130 @@
+[
+  {
+    "id": "ANN-001",
+    "requirementId": "FR-SCAN-001",
+    "filePath": "src/scanner/runner.rs",
+    "line": 42,
+    "type": "impl",
+    "snippet": "pub async fn run_scan(config: ScanConfig) -> ScanResult"
+  },
+  {
+    "id": "ANN-002",
+    "requirementId": "FR-SCAN-001",
+    "filePath": "src/scanner/runner.rs",
+    "line": 45,
+    "type": "impl",
+    "snippet": "run_scan(config).await?;"
+  },
+  {
+    "id": "ANN-003",
+    "requirementId": "FR-SCAN-002",
+    "filePath": "src/api/scan.rs",
+    "line": 27,
+    "type": "impl",
+    "snippet": "pub async fn scan_status() -> Json<ScanStatus>"
+  },
+  {
+    "id": "ANN-004",
+    "requirementId": "FR-SCAN-002",
+    "filePath": "src/api/scan.rs",
+    "line": 34,
+    "type": "impl",
+    "snippet": "pub fn scan_finished_at() -> Option<DateTime<Utc>>"
+  },
+  {
+    "id": "ANN-005",
+    "requirementId": "FR-REQ-001",
+    "filePath": "src/spec/requirements.rs",
+    "line": 61,
+    "type": "impl",
+    "snippet": "pub fn list_requirements() -> Vec<Requirement>"
+  },
+  {
+    "id": "ANN-006",
+    "requirementId": "FR-REQ-001",
+    "filePath": "src/spec/requirements_test.rs",
+    "line": 22,
+    "type": "test",
+    "snippet": "assert_eq!(requirements.len(), 8)"
+  },
+  {
+    "id": "ANN-007",
+    "requirementId": "FR-ANN-001",
+    "filePath": "src/trace/annotations.rs",
+    "line": 88,
+    "type": "impl",
+    "snippet": "pub fn parse_annotations(source: &str) -> Vec<Annotation>"
+  },
+  {
+    "id": "ANN-008",
+    "requirementId": "FR-ANN-001",
+    "filePath": "src/trace/annotations_test.rs",
+    "line": 37,
+    "type": "test",
+    "snippet": "assert!(annotations.iter().any(|a| a.kind == AnnotationKind::Test))"
+  },
+  {
+    "id": "ANN-009",
+    "requirementId": "FR-TASK-001",
+    "filePath": "src/tasks/repository.rs",
+    "line": 30,
+    "type": "impl",
+    "snippet": "pub async fn list_tasks() -> Result<Vec<Task>>"
+  },
+  {
+    "id": "ANN-010",
+    "requirementId": "FR-TASK-001",
+    "filePath": "src/tasks/repository_test.rs",
+    "line": 41,
+    "type": "test",
+    "snippet": "assert_eq!(task.status, TaskStatus::Open)"
+  },
+  {
+    "id": "ANN-011",
+    "requirementId": "AR-PERF-001",
+    "filePath": "src/cache/stats.rs",
+    "line": 14,
+    "type": "impl",
+    "snippet": "static STATS_CACHE: OnceLock<Stats> = OnceLock::new()"
+  },
+  {
+    "id": "ANN-012",
+    "requirementId": "AR-PERF-001",
+    "filePath": "src/cache/stats_test.rs",
+    "line": 19,
+    "type": "test",
+    "snippet": "assert!(elapsed < Duration::from_millis(100))"
+  },
+  {
+    "id": "ANN-013",
+    "requirementId": "AR-SEC-001",
+    "filePath": "src/api/validation.rs",
+    "line": 25,
+    "type": "impl",
+    "snippet": "validate_response_schema(&payload)?"
+  },
+  {
+    "id": "ANN-014",
+    "requirementId": "AR-SEC-001",
+    "filePath": "src/api/validation_test.rs",
+    "line": 32,
+    "type": "test",
+    "snippet": "assert!(validate_response_schema(&invalid).is_err())"
+  },
+  {
+    "id": "ANN-015",
+    "requirementId": "FR-UNKNOWN-999",
+    "filePath": "src/legacy/old_scan.rs",
+    "line": 9,
+    "type": "impl",
+    "snippet": "// @req FR-UNKNOWN-999 legacy implementation"
+  },
+  {
+    "id": "ANN-016",
+    "requirementId": "AR-LEGACY-404",
+    "filePath": "tests/legacy_trace_test.rs",
+    "line": 12,
+    "type": "test",
+    "snippet": "assert_legacy_trace_is_absent()"
+  }
+]

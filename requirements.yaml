@@ -1,0 +1,43 @@
+requirements:
+  - id: SCD-UI-001
+    title: Load project summary
+    description: The dashboard MUST display requirement, annotation, task, coverage, orphan, and last-scan statistics from the selected data provider.
+  - id: SCD-UI-002
+    title: Show requirements
+    description: The dashboard MUST list requirement ID, type, title, status, and updated timestamp.
+  - id: SCD-UI-003
+    title: Filter requirements
+    description: Users MUST be able to filter requirements by one or more types and coverage statuses.
+  - id: SCD-UI-004
+    title: Sort requirements
+    description: Users MUST be able to sort requirements by ID and updated timestamp in ascending or descending order.
+  - id: SCD-UI-005
+    title: Share filtered views
+    description: The dashboard MUST reflect requirement filters in URL query parameters and restore them on page load.
+  - id: SCD-UI-006
+    title: Inspect a requirement
+    description: Users MUST be able to open a requirement detail view containing metadata, linked annotations, and linked tasks.
+  - id: SCD-UI-007
+    title: Show tasks
+    description: The dashboard MUST list tasks and support filtering by open, in_progress, and done statuses.
+  - id: SCD-UI-008
+    title: Detect orphan records
+    description: The dashboard MUST identify annotations and tasks that reference unknown requirement IDs and show them in one panel.
+  - id: SCD-UI-009
+    title: Handle loading and errors
+    description: The dashboard MUST provide understandable loading, error, empty, and not-found states.
+  - id: SCD-UI-010
+    title: Support accessible navigation
+    description: The dashboard MUST use semantic controls, visible keyboard focus, descriptive labels, and aria-sort on sortable columns.
+  - id: SCD-UI-011
+    title: Switch theme
+    description: Users MUST be able to switch light and dark themes, with the choice persisted locally and system preference used initially.
+  - id: SCD-UI-012
+    title: Support mobile layout
+    description: The dashboard MUST present requirements in a readable card layout on narrow screens and a table on desktop.
+  - id: SCD-UI-013
+    title: Support API and mock modes
+    description: The application MUST use local JSON mock data by default and support a typed API provider configured by NEXT_PUBLIC_API_URL.
+  - id: SCD-UI-014
+    title: Verify traceability and delivery
+    description: The project MUST provide deterministic type, lint, test, build, and requirement traceability checks plus setup documentation.

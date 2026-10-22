@@ -1,0 +1,10 @@
+[
+ {"id":"FR-SCAN-001","type":"FR","title":"Trigger repository scan","description":"Users can trigger a scan of the connected repository.","status":"covered","createdAt":"2026-09-01T08:00:00Z","updatedAt":"2026-10-20T11:30:00Z"},
+ {"id":"FR-SCAN-002","type":"FR","title":"Report scan progress","description":"The system exposes scan status and completion timestamps.","status":"covered","createdAt":"2026-09-02T08:00:00Z","updatedAt":"2026-10-19T10:20:00Z"},
+ {"id":"FR-REQ-001","type":"FR","title":"List specification requirements","description":"Users can inspect parsed functional and architecture requirements.","status":"covered","createdAt":"2026-09-03T08:00:00Z","updatedAt":"2026-10-18T09:15:00Z"},
+ {"id":"FR-ANN-001","type":"FR","title":"Link code annotations","description":"Implementation and test annotations link source files to requirements.","status":"partial","createdAt":"2026-09-04T08:00:00Z","updatedAt":"2026-10-17T15:45:00Z"},
+ {"id":"FR-TASK-001","type":"FR","title":"Track implementation tasks","description":"Tasks can be linked to requirements and tracked by status.","status":"covered","createdAt":"2026-09-05T08:00:00Z","updatedAt":"2026-10-16T13:00:00Z"},
+ {"id":"FR-API-003","type":"FR","title":"Expose traceability statistics","description":"The API exposes aggregate counts and overall coverage.","status":"missing","createdAt":"2026-09-06T08:00:00Z","updatedAt":"2026-10-15T12:00:00Z"},
+ {"id":"AR-PERF-001","type":"AR","title":"Respond to dashboard queries quickly","description":"Common dashboard views should load without unnecessary client work.","status":"covered","createdAt":"2026-09-07T08:00:00Z","updatedAt":"2026-10-14T16:20:00Z"},
+ {"id":"AR-SEC-001","type":"AR","title":"Validate API response data","description":"Data received from the backend is validated before it is trusted.","status":"partial","createdAt":"2026-09-08T08:00:00Z","updatedAt":"2026-10-13T14:10:00Z"}
+]

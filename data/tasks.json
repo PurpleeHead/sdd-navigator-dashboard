@@ -1,0 +1,8 @@
+[
+ {"id":"TASK-101","requirementId":"FR-SCAN-001","title":"Add scan cancellation support","status":"done","assignee":"M. Ivanov","updatedAt":"2026-10-20T11:30:00Z"},
+ {"id":"TASK-102","requirementId":"FR-SCAN-002","title":"Expose scan duration","status":"done","assignee":"A. Chen","updatedAt":"2026-10-19T10:20:00Z"},
+ {"id":"TASK-103","requirementId":"FR-REQ-001","title":"Improve requirement parsing diagnostics","status":"in_progress","assignee":"S. Patel","updatedAt":"2026-10-18T09:15:00Z"},
+ {"id":"TASK-104","requirementId":"FR-ANN-001","title":"Resolve duplicate annotation IDs","status":"open","updatedAt":"2026-10-17T15:45:00Z"},
+ {"id":"TASK-105","requirementId":"FR-API-003","title":"Add aggregate statistics endpoint","status":"open","assignee":"L. Garcia","updatedAt":"2026-10-16T13:00:00Z"},
+ {"id":"TASK-106","requirementId":"FR-OLD-404","title":"Remove legacy trace adapter","status":"open","updatedAt":"2026-10-15T12:00:00Z"}
+]

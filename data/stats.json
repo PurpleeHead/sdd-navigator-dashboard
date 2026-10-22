@@ -1,0 +1,6 @@
+{
+ "requirementStats":{"total":8,"byType":{"FR":6,"AR":2},"byStatus":{"covered":5,"partial":2,"missing":1}},
+ "annotationStats":{"total":16,"byType":{"impl":10,"test":6},"orphans":2},
+ "taskStats":{"total":6,"byStatus":{"done":2,"in_progress":1,"open":3},"orphans":1},
+ "coverage":62.5,"lastScanAt":"2026-10-22T09:42:00Z"
+}
