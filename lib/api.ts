@@ -4,7 +4,7 @@ import mockAnnotations from '@/data/annotations.json';
 import mockTasks from '@/data/tasks.json';
 import { API_BASE_URL } from './config';
 import { buildStats } from './coverage';
-import { validateAnnotations, validateRequirements, validateStats, validateTasks } from './validation';
+import { validateAnnotations, validateRequirements, validateScanStatus, validateStats, validateTasks } from './validation';
 import type { Annotation, ApiError, DataBundle, Requirement, RequirementDetail, RequirementFilters, Result, ScanStatus, Stats, Task, TaskFilters } from './types';
 
 async function request<T>(path: string, validator: (value: unknown) => T, init?: RequestInit): Promise<Result<T>> {
@@ -66,7 +66,7 @@ export async function listAnnotations(filters: { type?: 'impl' | 'test'; orphans
   if (API_BASE_URL) return request(`/annotations${queryString({ type: filters.type, orphans: filters.orphans === undefined ? undefined : String(filters.orphans) })}`, validateAnnotations);
   let items = validateAnnotations(mockAnnotations);
   if (filters.type) items = items.filter((item) => item.type === filters.type);
-  if (filters.orphans) { const ids = new Set(validateRequirements(mockRequirements).map((item) => item.id)); items = items.filter((item) => !ids.has(item.requirementId)); }
+  if (filters.orphans !== undefined) { const ids = new Set(validateRequirements(mockRequirements).map((item) => item.id)); items = items.filter((item) => !ids.has(item.requirementId) === filters.orphans); }
   return { ok: true, data: items };
 }
 // @req SCD-UI-007
@@ -76,6 +76,12 @@ export async function listTasks(filters: TaskFilters & { sort?: 'id' | 'updatedA
     if (!result.ok) return result;
     let items = result.data;
     if (filters.status?.length) items = items.filter((item) => filters.status?.includes(item.status));
+    if (filters.orphans !== undefined) {
+      const requirements = await listRequirements();
+      if (!requirements.ok) return requirements;
+      const ids = new Set(requirements.data.map((item) => item.id));
+      items = items.filter((item) => !ids.has(item.requirementId) === filters.orphans);
+    }
     return { ok: true, data: items };
   }
   let items = validateTasks(mockTasks);
@@ -86,12 +92,12 @@ export async function listTasks(filters: TaskFilters & { sort?: 'id' | 'updatedA
 }
 // @req SCD-UI-013
 export async function triggerScan(): Promise<Result<ScanStatus>> {
-  if (API_BASE_URL) return request('/scan', (value) => value as ScanStatus, { method: 'POST' });
+  if (API_BASE_URL) return request('/scan', validateScanStatus, { method: 'POST' });
   return { ok: true, data: { status: 'completed', startedAt: new Date().toISOString(), completedAt: new Date().toISOString(), message: 'Mock scan completed. No backend was contacted.' } };
 }
 // @req SCD-UI-013
 export async function getScanStatus(): Promise<Result<ScanStatus>> {
-  if (API_BASE_URL) return request('/scan', (value) => value as ScanStatus);
+  if (API_BASE_URL) return request('/scan', validateScanStatus);
   return { ok: true, data: { status: 'completed', startedAt: mockStats.lastScanAt ?? undefined, completedAt: mockStats.lastScanAt ?? undefined, message: 'Showing the last sample scan.' } };
 }
 export async function getDataBundle(): Promise<Result<DataBundle>> {
