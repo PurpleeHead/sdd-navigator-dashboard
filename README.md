@@ -37,7 +37,7 @@ NEXT_PUBLIC_API_URL=https://your-api.example.com
 
 Restart the development server after changing environment variables. The API provider expects `GET /stats`, `GET /requirements`, `GET /requirements/{id}`, `GET /annotations`, `GET /tasks`, `POST /scan`, and `GET /scan`.
 
-**Contract note:** the original task description refers to a downloadable OpenAPI/YAML contract but the actual contract file was not included with the provided task text. The client uses a documented provisional model matching the fields listed in the task. Before submitting to the employer, compare `lib/types.ts`, runtime validators, and `lib/api.ts` with the official API YAML and adjust any endpoint response envelopes or field names that differ.
+The official OpenAPI v3 contract is available as `sdd-coverage-api.yaml`. The client normalizes the API v3 statistics and annotation fields into the UI model and validates scan-status responses at runtime. Keep the contract file in the repository so future changes can be checked against the same source of truth.
 
 ## Validation
 
