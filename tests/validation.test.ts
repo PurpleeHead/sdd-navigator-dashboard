@@ -22,7 +22,7 @@ describe('runtime schema validation', () => {
 // @req SCD-UI-011
 describe('official SDD Navigator API v3 payloads', () => {
   it('normalizes official annotation fields to the UI model', () => {
-    expect(validateAnnotations([{ file: 'src/main.ts', line: 12, reqId: 'FR-API-001', type: 'impl', snippet: '// @req FR-API-001' }])).toMatchObject([
+    expect(validateAnnotations([{ file: 'src/main.ts', line: 12, reqId: 'FR-API-001', type: 'impl', snippet: '// req FR-API-001' }])).toMatchObject([
       { filePath: 'src/main.ts', line: 12, requirementId: 'FR-API-001', type: 'impl' },
     ]);
   });
